@@ -1,7 +1,12 @@
+require('dotenv').config()
+const sgMail =require('@sendgrid/mail')  //using npm module npm i @sendgrid/mail
+sgMail.setApiKey(process.env.SENDGRID_API);
 const axios =require('axios');
 const jsdom =require("jsdom");
 const mongoose =require("mongoose");
+
 const {JSDOM} =jsdom;
+
 /*
 const args =process.argv.slice(2);
 const url=args[0];
@@ -36,7 +41,13 @@ async function getPrices(){
          
     })
     if(numb<10000)
+    {
     amaz.subje="buy now";
+    sendEmail(
+        'price is low',
+        'the price on ${url} has dropped below 100000'
+    );
+    }
  else{
     amaz.subje="price not decreased ";
  }
@@ -46,7 +57,19 @@ async function getPrices(){
 catch(err){
     console.log(err);
 } 
+
 }
+}
+
+function sendEmail(subject, body){
+    const email={
+        to: 'gixina2748@logodez.com',
+        from :'gixina2748@logodez.com',
+        subject :subject,
+        text:body,
+        html :body
+    }
+    return sgMail.send(email);
 }
 
 getPrices();
